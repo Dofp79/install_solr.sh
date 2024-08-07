@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# Schritt 1: System aktualisieren
+echo "Aktualisiere das System..."
+sudo apt-get update
+sudo apt-get upgrade -y
+
+# Schritt 2: Java installieren
+echo "Installiere OpenJDK 11..."
+sudo apt-get install -y openjdk-11-jdk
+java -version # Überprüfe die Java-Installation
+
+# Schritt 3: Apache Solr herunterladen
+SOLR_VERSION="8.11.1" # Setze die gewünschte Solr-Version
+echo "Lade Apache Solr $SOLR_VERSION herunter..."
+wget https://downloads.apache.org/lucene/solr/solr-$SOLR_VERSION/solr-$SOLR_VERSION.tgz
+
+# Schritt 4: Datei entpacken
+echo "Entpacke Apache Solr..."
+tar xzf solr-$SOLR_VERSION.tgz
+
+# Schritt 5: Solr installieren
+echo "Installiere Apache Solr als Dienst..."
+cd solr-$SOLR_VERSION
+sudo bin/install_solr_service.sh ../solr-$SOLR_VERSION.tgz
+
+# Schritt 6: Solr-Dienst starten
+echo "Starte den Solr-Dienst..."
+sudo systemctl start solr
+sudo systemctl status solr # Überprüfe den Status des Solr-Dienstes
+
+# Schritt 7: Solr konfigurieren
+echo "Erstelle eine neue Solr-Sammlung..."
+sudo su - solr -c "/opt/solr/bin/solr create -c licencias_software"
+
+# Schritt 8: SolrCloud konfigurieren (optional)
+# Folge der offiziellen Dokumentation, um SolrCloud zu konfigurieren
+
+# Schritt 9: Zusätzliche Abhängigkeiten konfigurieren
+# Installiere und konfiguriere Python, JavaScript und die erforderlichen APIs gemäß den Anforderungen deines Projekts
+
+# Schritt 10: Umgang mit Fehlern
+# Konsultiere die Protokolle unter /var/solr/logs/ für häufige Fehler während der Installation
+
+# Erweiterte Konfigurationen und Funktionen von Apache Solr
+
+# Schritt 11: Analyse und Textextraktion aus PDFs
+echo "Installiere Apache Tika..."
+sudo apt-get install -y tika
+
+# Beispiel für die Textextraktion aus einer PDF-Datei
+# java -jar tika-app-x.x.jar --text example.pdf > example.txt
+
+# Schritt 12: Konfiguration von Schemas und benutzerdefinierten Feldern
+# Bearbeite die schema.xml, um benutzerdefinierte Felder hinzuzufügen
+# sudo nano /var/solr/data/licencias_software/conf/schema.xml
+
+# Schritt 13: Indexierung von Dokumenten
+# Verwende den Post-Befehl von Solr, um die verarbeiteten PDF-Dokumente zu indexieren
+# bin/post -c licencias_software example.txt
+
+# Schritt 14: Fortgeschrittene Abfragen
+# Beispiel für eine Abfrage
+# http://localhost:8983/solr/licencias_software/select?q=licencia
+
+# Schritt 15: Integration mit externen Anwendungen
+# Konfiguriere Solr, um mit externen Anwendungen unter Verwendung der Solr-APIs zu arbeiten
+
+# Schritt 16: Sicherheits- und Authentifizierungskonfiguration
+# Konfiguriere die Authentifizierung und Autorisierung in Solr
+
+# Schritt 17: Optimierung und Feinabstimmung von Solr
+# Optimiere die Leistung von Solr durch Anpassung von Parametern wie Heap-Größe, Garbage Collection und Caching
+
+# Schritt 18: Überwachung und Wartung
+# Überwache die Leistung von Solr mit Tools wie Prometheus und Grafana
+
+echo "Apache Solr Installation und Konfiguration abgeschlossen!"
